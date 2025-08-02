@@ -50,8 +50,7 @@ The architecture for this Jenkins deployment is straightforward and leverages co
 *   **EC2 Instance**: A virtual server in the AWS cloud that will host the Jenkins application.
 *   **Elastic IP (EIP)**: A static, public IPv4 address designed for dynamic cloud computing. An EIP is associated with your AWS account, not a specific instance, and you can allocate it to an instance in your account.
 *   **Key Pair**: A set of security credentials that you use to prove your identity when connecting to an EC2 instance.
-
-```mermaid
+```
 graph TD
     A[Internet] --> B(Internet Gateway)
     B --> C(VPC)
