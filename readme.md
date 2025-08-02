@@ -98,10 +98,10 @@ terraform init
 Define your Virtual Private Cloud (VPC) in your Terraform configuration. This will be the isolated network for your Jenkins server.
 
 ```terraform
-resource "aws_vpc" "jenkins_vpc" {
+resource "aws_vpc" "project_vpc" {
   cidr_block = "10.0.0.0/16"
   tags = {
-    Name = "jenkins-vpc"
+    Name = "project-vpc"
   }
 }
 ```
@@ -112,10 +112,10 @@ resource "aws_vpc" "jenkins_vpc" {
 Create an Internet Gateway and attach it to your newly created VPC. Then, create a route table and add a route that directs all internet-bound traffic (0.0.0.0/0) to the Internet Gateway.
 
 ```terraform
-resource "aws_internet_gateway" "jenkins_igw" {
-  vpc_id = aws_vpc.jenkins_vpc.id
+resource "aws_internet_gateway" "project_igw" {
+  vpc_id = aws_vpc.project_vpc.id
   tags = {
-    Name = "jenkins-igw"
+    Name = "project-igw"
   }
 }
 ```
@@ -123,16 +123,16 @@ resource "aws_internet_gateway" "jenkins_igw" {
 ![Jenkins](./images/ig.png)
 
 ```
-resource "aws_route_table" "jenkins_route_table" {
-  vpc_id = aws_vpc.jenkins_vpc.id
+resource "aws_route_table" "project_public_rt" {
+  vpc_id = aws_vpc.project_vpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.jenkins_igw.id
+    gateway_id = aws_internet_gateway.project_igw.id
   }
 
   tags = {
-    Name = "jenkins-route-table"
+    Name = "project-public-rt"
   }
 }
 ```
@@ -144,20 +144,20 @@ resource "aws_route_table" "jenkins_route_table" {
 Create a public subnet within your VPC and associate it with the route table you created. This subnet will host your Jenkins EC2 instance.
 
 ```terraform
-resource "aws_subnet" "jenkins_public_subnet" {
-  vpc_id                  = aws_vpc.jenkins_vpc.id
+resource "aws_subnet" "project_public_subnet" {
+  vpc_id                  = aws_vpc.project_vpc.id
   cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true # Automatically assign public IP to instances launched in this subnet
   availability_zone       = "us-east-1a" # Or your preferred AZ
 
   tags = {
-    Name = "jenkins-public-subnet"
+    Name = "project-public-subnet"
   }
 }
 
 resource "aws_route_table_association" "jenkins_subnet_association" {
-  subnet_id      = aws_subnet.jenkins_public_subnet.id
-  route_table_id = aws_route_table.jenkins_route_table.id
+  subnet_id      = aws_subnet.project_public_subnet.id
+  route_table_id = aws_route_table.project_public_rt.id
 }
 ```
 ![Jenkins](./images/subnet.png)
@@ -168,9 +168,9 @@ Define a security group that allows inbound traffic on port 80 (HTTP) for Jenkin
 
 ```terraform
 resource "aws_security_group" "jenkins_sg" {
-  name        = "jenkins-security-group"
+  name        = "tutorial_jenkins_sg"
   description = "Allow HTTP and SSH inbound traffic"
-  vpc_id      = aws_vpc.jenkins_vpc.id
+  vpc_id      = aws_vpc.project_vpc.id
 
   ingress {
     from_port   = 80
@@ -226,10 +226,9 @@ Finally, define the EC2 instance, associate it with the public subnet and securi
 First, create a key pair. You can do this manually in the AWS console or using Terraform:
 
 ```terraform
-resource "aws_key_pair" "jenkins_key" {
-  key_name   = "jenkins-key"
-  public_key = file("~/.ssh/NewKey.pub") # Replace with the path to your public SSH key
-}
+resource "aws_key_pair" "Key_SSH" {
+  key_name   = "key"
+  public_key = file("D:/aws/key.pub")
 ```
 ![Jenkins](./images/key.png)
 
