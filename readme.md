@@ -2,7 +2,7 @@
 
 This project provides a comprehensive solution for deploying a Jenkins server on an Amazon Web Services (AWS) EC2 instance using Terraform. Jenkins is an open-source automation server that facilitates continuous integration and continuous delivery (CI/CD) for software development. This setup automates the infrastructure provisioning and application deployment, ensuring a repeatable and scalable environment for your CI/CD pipelines.
 
-![Jenkins](./images/jenkins.gif)
+![Jenkins](./images/jenkins1.gif)
 
 ## Main Requirements
 
@@ -321,6 +321,8 @@ By following these steps, you can confirm that your Jenkins server is successful
 Once Jenkins is installed and configured, you can access it via your web browser using the Elastic IP address assigned to the EC2 instance. You can then log in with the administrator credentials you set up during the initial Jenkins configuration.
 
 For SSH access to the EC2 instance, use the key pair specified during the Terraform deployment.
+
+![Jenkins](./images/url.png)
 
 ## Cleanup
 
