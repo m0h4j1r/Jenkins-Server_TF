@@ -2,7 +2,7 @@
 
 This project provides a comprehensive solution for deploying a Jenkins server on an Amazon Web Services (AWS) EC2 instance using Terraform. Jenkins is an open-source automation server that facilitates continuous integration and continuous delivery (CI/CD) for software development. This setup automates the infrastructure provisioning and application deployment, ensuring a repeatable and scalable environment for your CI/CD pipelines.
 
-
+![Jenkins](./images/jenkins.gif)
 
 ## Main Requirements
 
@@ -106,6 +106,7 @@ resource "aws_vpc" "jenkins_vpc" {
   }
 }
 ```
+![Jenkins](./images/vpc.png)
 
 ### Step 3: Create the Internet Gateway and attach it to the VPC using a Route Table
 
@@ -118,7 +119,11 @@ resource "aws_internet_gateway" "jenkins_igw" {
     Name = "jenkins-igw"
   }
 }
+```
 
+![Jenkins](./images/ig.png)
+
+```
 resource "aws_route_table" "jenkins_route_table" {
   vpc_id = aws_vpc.jenkins_vpc.id
 
@@ -132,6 +137,8 @@ resource "aws_route_table" "jenkins_route_table" {
   }
 }
 ```
+
+![Jenkins](./images/rt.png)
 
 ### Step 4: Create a Public Subnet and associate it with the Route Table
 
@@ -154,6 +161,7 @@ resource "aws_route_table_association" "jenkins_subnet_association" {
   route_table_id = aws_route_table.jenkins_route_table.id
 }
 ```
+![Jenkins](./images/subnet.png)
 
 ### Step 5: Create a Security Group for the EC2 Instance
 
@@ -191,6 +199,7 @@ resource "aws_security_group" "jenkins_sg" {
   }
 }
 ```
+![Jenkins](./images/sg.png)
 
 ### Step 6: Create a script to automate the installation of Jenkins on the EC2 Instance
 
@@ -220,9 +229,10 @@ First, create a key pair. You can do this manually in the AWS console or using T
 ```terraform
 resource "aws_key_pair" "jenkins_key" {
   key_name   = "jenkins-key"
-  public_key = file("~/.ssh/id_rsa.pub") # Replace with the path to your public SSH key
+  public_key = file("~/.ssh/NewKey.pub") # Replace with the path to your public SSH key
 }
 ```
+![Jenkins](./images/key.png)
 
 Now, define the EC2 instance:
 
